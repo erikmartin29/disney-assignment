@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react'
 
 const allowedTypes = ['CuratedSet','PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
 
-const Row = ({ title, refID }) => {
+const Row = ({ title, refID, isRowSelected }) => {
     const [data, setData] = useState(null)
+    const [selectedCell, setSelectedCell] = useState(0)
+    const [numCells, setNumCells] = useState(0)
 
     // fetch data upon component mount
     useEffect(() => {
@@ -27,8 +29,9 @@ const Row = ({ title, refID }) => {
                         type
                     }
                 })
-                
+
                 setData(newData)
+                setNumCells(newData.length)
             } catch (error) {
                 console.error('Error fetching data:', error)
             }
@@ -36,17 +39,36 @@ const Row = ({ title, refID }) => {
     
         fetchData()
     }, [refID])
-    
+
+    // handle keypress events to navigate the cells
+    useEffect(() => {
+        const handleKeyPress = (event) => {
+            if (event.key === 'a' && selectedCell > 0) {
+                setSelectedCell(prevRow => prevRow - 1)
+            } else if (event.key === 'd' && selectedCell < numCells - 1) {
+                setSelectedCell(prevRow => prevRow + 1)
+            }
+            //reset the selected cell if we're moving to another row
+            if (event.key === 'w' || event.key === 's')
+                setSelectedCell(0)
+        }
+        document.addEventListener('keydown', handleKeyPress)
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress)
+        }
+    }, [selectedCell, numCells])
+
     return (
         <div>
             <h3>{title}</h3>
             {/*<p>{refID}</p>*/}
             <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                {data && data.map((obj, idx) => (
-                    <div key={obj.title} style={{ flex: '0 0 20%', margin: '10px'}}>
-                        <img width="100%" src={obj.img} alt={obj.title} />
-                    </div>
-                ))}
+                {data && data.map((obj, idx) => {
+                    if(idx === selectedCell && isRowSelected)
+                        return <div key={obj.title} style={{ flex: '0 0 20%', margin: '10px'}}><img width="100%" src={obj.img} alt={obj.title} style={{ opacity: "1.0" }}/></div>
+                    else
+                        return <div key={obj.title} style={{ flex: '0 0 20%', margin: '10px'}}><img width="100%" src={obj.img} alt={obj.title} style={{ opacity: "0.4" }} /></div>
+            })}
             </div>
         </div>
     )
