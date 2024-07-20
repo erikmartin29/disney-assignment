@@ -44,7 +44,7 @@ const Row = ({ title, items, isRowFocused }) => {
                                 //define styles for both focused and unfocused states
                                 const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.90";
                                 const opacity = idx === focusedCell && isRowFocused ? "100%" : "50%";
-                                const border = idx === focusedCell && isRowFocused ? "2px solid white" : "none";
+                                const border = idx === focusedCell && isRowFocused ? "2px solid white" : "2px solid transparent";
                                 const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "none";
 
                                 return (
