@@ -1,75 +1,66 @@
 import React, { useEffect, useState } from 'react'
 
-const allowedTypes = ['CuratedSet','PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
-
-const Row = ({ title, refID, isRowSelected }) => {
-    const [data, setData] = useState(null)
-    const [selectedCell, setSelectedCell] = useState(0)
-    const [numCells, setNumCells] = useState(0)
-
-    // fetch data upon component mount
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                //fetch data from the endpoint
-                const response = await fetch(`https://cd-static.bamgrid.com/dp-117731241344/sets/${refID}.json`)
-                const json = await response.json()
-                
-                // figure out what "type" this object is, since the key is dynamic based on the type
-                const objKey = Object.keys(json.data).find(key => allowedTypes.includes(key));
-
-                // map the data to a new object to only keep the information we need
-                const newData = json.data[objKey].items.map(obj => {
-                    // figure out whether it's a series or a program, so we can use the right key when parsing the object
-                    const type = Object.keys(obj.text.title.full).find(key => key.includes('series') || key.includes('program'));
-
-                    return {
-                        title: obj.text.title.full[type]?.default.content,
-                        img: obj.image.tile["1.78"]?.[type]?.default?.url, // ensure we use the 1.78 aspect ratio image
-                        type
-                    }
-                })
-
-                setData(newData)
-                setNumCells(newData.length)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
-    
-        fetchData()
-    }, [refID])
+const Row = ({ title, items, isRowFocused }) => {
+    const [focusedCell, setFocusedCell] = useState(0)
+    const numCells = items.length
+    const exceptions = ['New to Disney+', 'Collections'] //list of exceptions whose categories were giving me too much trouble to parse
 
     // handle keypress events to navigate the cells
     useEffect(() => {
         const handleKeyPress = (event) => {
-            if (event.key === 'a' && selectedCell > 0) {
-                setSelectedCell(prevRow => prevRow - 1)
-            } else if (event.key === 'd' && selectedCell < numCells - 1) {
-                setSelectedCell(prevRow => prevRow + 1)
-            }
-            //reset the selected cell if we're moving to another row
-            if (event.key === 'w' || event.key === 's')
-                setSelectedCell(0)
+            if (event.key === 'a' && focusedCell > 0)
+                setFocusedCell(prevRow => prevRow - 1)
+            else if (event.key === 'd' && focusedCell < numCells - 1)
+                setFocusedCell(prevRow => prevRow + 1)
+            else if (event.key === 'w' || event.key === 's')
+                setFocusedCell(0) //reset the focused cell if we're moving to another row
         }
         document.addEventListener('keydown', handleKeyPress)
         return () => {
             document.removeEventListener('keydown', handleKeyPress)
         }
-    }, [selectedCell, numCells])
+    }, [focusedCell, numCells])
+
+    //calculate the x-offset for the row based on the focused cell
+    let xOffset = 0;
+    if (isRowFocused && focusedCell < numCells - 4) { // don't move ant further if we're 4 away from the end
+        xOffset = focusedCell * -300 + 'px'
+    } else {
+        xOffset = isRowFocused ? (numCells - 5) * -300 + 'px' : '0px'
+    }
+
+    const transition = "transform 0.2s ease-in-out, opacity 0.2s ease-in-out";
 
     return (
-        <div>
-            <h3>{title}</h3>
-            {/*<p>{refID}</p>*/}
-            <div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-                {data && data.map((obj, idx) => {
-                    if(idx === selectedCell && isRowSelected)
-                        return <div key={obj.title} style={{ flex: '0 0 20%', margin: '10px'}}><img width="100%" src={obj.img} alt={obj.title} style={{ opacity: "1.0" }}/></div>
-                    else
-                        return <div key={obj.title} style={{ flex: '0 0 20%', margin: '10px'}}><img width="100%" src={obj.img} alt={obj.title} style={{ opacity: "0.4" }} /></div>
-            })}
-            </div>
+        <div id="row">
+            {!exceptions.includes(title) && 
+                <div style={{ height: '225px' }}>
+                    <p width="100px" class={`justify-left text-left ${isRowFocused ? 'font-extrabold' : ''}`}>{title}</p>
+                    <div style={{ display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition }}>
+                        { items.map((obj, idx) => {
+                            if (exceptions.includes(obj.title))
+                                return null;
+                            else {
+                                //define styles for both focused and unfocused states
+                                const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.90";
+                                const opacity = idx === focusedCell && isRowFocused ? "100%" : "50%";
+                                const border = idx === focusedCell && isRowFocused ? "2px solid white" : "none";
+                                const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "none";
+
+                                return (
+                                    <div key={obj.title} style={{ flex: "row" , justifyContent: 'center' }}>
+                                        <img
+                                            width="300px"
+                                            src={obj.img}
+                                            alt={obj.title}
+                                            style={{ transformOrigin: 'center', transform: `scale(${scale})`, opacity, border, transition, boxShadow: shadows }}
+                                        />
+                                    </div>
+                                );
+                            }
+                        })}
+                    </div> 
+            </div>}
         </div>
     )
 }
