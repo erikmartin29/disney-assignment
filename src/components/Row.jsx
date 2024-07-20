@@ -24,9 +24,9 @@ const Row = ({ title, items, isRowFocused }) => {
     //calculate the x-offset for the row based on the focused cell
     let xOffset = 0;
     if (isRowFocused && focusedCell < numCells - 4) { // don't move ant further if we're 4 away from the end
-        xOffset = focusedCell * -300 + 'px'
+        xOffset = focusedCell * -324 + 'px'
     } else {
-        xOffset = isRowFocused ? (numCells - 5) * -300 + 'px' : '0px'
+        xOffset = isRowFocused ? (numCells - 5) * -324 + 'px' : '0px'
     }
 
     const transition = "transform 0.2s ease-in-out, opacity 0.2s ease-in-out";
@@ -35,25 +35,25 @@ const Row = ({ title, items, isRowFocused }) => {
         <div id="row">
             {!exceptions.includes(title) && 
                 <div style={{ height: '225px' }}>
-                    <p width="100px" class={`justify-left text-left ${isRowFocused ? 'font-extrabold' : ''}`}>{title}</p>
-                    <div style={{ display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition }}>
+                    <p width="100px" className="justify-left text-left font-bold">{title}</p>
+                    <div style={{ width: "300px", display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition }}>
                         { items.map((obj, idx) => {
                             if (exceptions.includes(obj.title))
                                 return null;
                             else {
                                 //define styles for both focused and unfocused states
-                                const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.90";
+                                const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.9";
                                 const opacity = idx === focusedCell && isRowFocused ? "100%" : "50%";
                                 const border = idx === focusedCell && isRowFocused ? "2px solid white" : "2px solid transparent";
                                 const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "none";
 
                                 return (
-                                    <div key={obj.title} style={{ flex: "row" , justifyContent: 'center' }}>
+                                    <div key={obj.title} style={{ justifyContent: 'center',  transformOrigin: 'center', transform: `scale(${scale})`, marginRight: '20px' }}>
                                         <img
                                             width="300px"
                                             src={obj.img}
                                             alt={obj.title}
-                                            style={{ transformOrigin: 'center', transform: `scale(${scale})`, opacity, border, transition, boxShadow: shadows }}
+                                            style={{opacity, border, transition, boxShadow: shadows }}
                                         />
                                     </div>
                                 );
