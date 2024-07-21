@@ -30,6 +30,7 @@ const Row = ({ title, items, isRowFocused }) => {
     }
 
     const transition = "transform 0.25s ease-in-out, opacity 0.35s ease-in";
+    const blurTransition = "opacity 0.35s ease-in";
 
     return (
         <div>
@@ -45,16 +46,23 @@ const Row = ({ title, items, isRowFocused }) => {
                                     //define styles for both focused and unfocused states
                                     const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.9";
                                     const opacity = idx === focusedCell && isRowFocused ? "100%" : "50%";
+                                    const blurOpacity = idx === focusedCell && isRowFocused ? "100%" : "0%";
                                     const border = idx === focusedCell && isRowFocused ? "2px solid white" : "2px solid transparent";
                                     const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "15px 15px 30px black";
 
                                     return (
-                                        <div key={obj.title} style={{ justifyContent: 'center', transformOrigin: 'center', transform: `scale(${scale})`, marginRight: '20px' }}>
+                                        <div key={obj.title} style={{ justifyContent: 'center', transformOrigin: 'center', transform: `scale(${scale})`, marginRight: '20px', position: 'relative' }}>
                                             <img
                                                 width="300px"
                                                 src={obj.img}
                                                 alt={obj.title}
-                                                style={{ border, opacity, transition, boxShadow: shadows }}
+                                                style={{ border, opacity, transition, boxShadow: shadows, position: 'relative', zIndex: 1 }}
+                                            />
+                                            <img
+                                                width="300px"
+                                                src={obj.img}
+                                                alt={`blur:${obj.title}`}
+                                                style={{ filter: 'blur(7px)', top: 2, left: 2, opacity: blurOpacity, transition: blurTransition, position: 'absolute', zIndex: 0 }}
                                             />
                                         </div>
                                     );
