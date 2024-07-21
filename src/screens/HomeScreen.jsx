@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Row from '../components/Row'
 
 const HomeScreen = () => {
-    const [data, setData] = useState([])
-    const [numRows, setNumRows] = useState(0)
+    const [data, setData] = useState([]) // data for each Row component
+
     const [focusedRow, setFocusedRow] = useState(2) // default to 2 because first two rows had parsing issues
+    const [numRows, setNumRows] = useState(0)
+
+    const transition = "transform 0.25s ease-in-out"; // parameters for scrolling animation
 
     // fetch and parse data from the API on component mount
     useEffect(() => {
@@ -16,15 +19,16 @@ const HomeScreen = () => {
 
                 //map the data to keep only the information we need (titles and images)
                 const data = await Promise.all(containers.map(async obj => {
-                    if(obj.set.refId) { //fetch the data from the refId if there is one
+                    if (obj.set.refId) { //fetch the data from the refId if there is one
                         const fetchByRefID = async (refID) => {
                             try {
                                 const response = await fetch(`https://cd-static.bamgrid.com/dp-117731241344/sets/${refID}.json`)
                                 const json = await response.json()
-                               
+
                                 // since the keys vary depending on the group's category, we need to find the right one
-                                const keys = ['CuratedSet','PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
+                                const keys = ['CuratedSet', 'PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
                                 const objKey = Object.keys(json.data).find(key => keys.includes(key));
+
                                 const showData = json.data[objKey].items.map(obj => {
                                     // figure out whether it's a series or a program, so we can use the right key when parsing the object
                                     const type = Object.keys(obj.text.title.full).find(key => key.includes('series') || key.includes('program'));
@@ -54,7 +58,7 @@ const HomeScreen = () => {
 
                         return {
                             text: obj.set.text.title.full.set.default.content,
-                            items: items                      
+                            items: items
                         }
                     }
                 }))
@@ -70,34 +74,32 @@ const HomeScreen = () => {
 
     // handle keypress events to navigate the rows (and keep within bounds)
     useEffect(() => {
-        const handleKeyPress = (event) => {  
+        const handleKeyPress = (event) => {
             if (event.key === 'w' && focusedRow > 2) // normally this would be 0, but the first two rows had parsing issues
                 setFocusedRow(prevRow => prevRow - 1)
             else if (event.key === 's' && focusedRow < numRows - 1)
                 setFocusedRow(prevRow => prevRow + 1)
         }
         document.addEventListener('keydown', handleKeyPress)
-        return () => { document.removeEventListener('keydown', handleKeyPress)}
-    }, [focusedRow, numRows]) //this also needs to keep track of focusedRow since it changes
+        return () => { document.removeEventListener('keydown', handleKeyPress) }
+    }, [focusedRow, numRows])
 
     //calculate the y-offset for the row based on the focused row
     let yOffset;
-    if (focusedRow <= 5) { // no need to scroll until the 5th row is selected
+    if (focusedRow <= 5) { // no need to scroll down until the 5th row is selected
         yOffset = 0
     } else {
         yOffset = (focusedRow - 5) * -225 + 'px'
     }
 
-    const transition = "transform 0.25s ease-in-out, opacity 0.35s ease-in";
-
     return (
-        <div style={{transform: `translateY(${yOffset})`, transition}}>
+        <div style={{ transform: `translateY(${yOffset})`, transition }}>
             {data && data.map((obj, idx) => (
-                <Row 
+                <Row
                     title={obj.text}
-                    items={obj.items} 
-                    isRowFocused={focusedRow === idx} 
-                    key={obj.text} 
+                    items={obj.items}
+                    isRowFocused={focusedRow === idx}
+                    key={obj.text}
                 />
             ))}
         </div>

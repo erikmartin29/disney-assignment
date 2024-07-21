@@ -24,21 +24,21 @@ const Row = ({ title, items, isRowFocused }) => {
     //calculate the x-offset for the row based on the focused cell
     let xOffset;
     if (isRowFocused && focusedCell < numCells - 4) { // don't move ant further if we're 4 away from the end
-        xOffset = focusedCell * -324 + 'px' 
+        xOffset = focusedCell * -324 + 'px'
     } else {
         xOffset = isRowFocused ? (numCells - 5) * -324 + 'px' : '0px'
-    } 
+    }
 
     const transition = "transform 0.25s ease-in-out, opacity 0.35s ease-in";
 
     return (
         <div>
-            {!exceptions.includes(title) && 
-                <div style={{height: "225px", display: "flex", justifyContent: "left", alignItems: "center"}}>
+            {!exceptions.includes(title) &&
+                <div style={{ height: "225px", display: "flex", justifyContent: "left", alignItems: "center" }}>
                     <div>
                         <p>{title}</p>
                         <div style={{ width: "300px", display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition }}>
-                            { items.map((obj, idx) => {
+                            {items.map((obj, idx) => {
                                 if (exceptions.includes(obj.title))
                                     return null;
                                 else {
@@ -49,20 +49,20 @@ const Row = ({ title, items, isRowFocused }) => {
                                     const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "15px 15px 30px black";
 
                                     return (
-                                        <div key={obj.title} style={{ justifyContent: 'center',  transformOrigin: 'center', transform: `scale(${scale})`, marginRight: '20px' }}>
+                                        <div key={obj.title} style={{ justifyContent: 'center', transformOrigin: 'center', transform: `scale(${scale})`, marginRight: '20px' }}>
                                             <img
                                                 width="300px"
                                                 src={obj.img}
                                                 alt={obj.title}
-                                                style={{border, opacity, transition, boxShadow: shadows }}
+                                                style={{ border, opacity, transition, boxShadow: shadows }}
                                             />
                                         </div>
                                     );
                                 }
                             })}
-                        </div> 
+                        </div>
                     </div>
-            </div>}
+                </div>}
         </div>
     )
 }
