@@ -8,11 +8,11 @@ const Row = ({ title, items, isRowFocused }) => {
     // handle keypress events to navigate the cells
     useEffect(() => {
         const handleKeyPress = (event) => {
-            if (event.key === 'a' && focusedCell > 0)
+            if (event.key === 'ArrowLeft' && focusedCell > 0)
                 setFocusedCell(prevRow => prevRow - 1)
-            else if (event.key === 'd' && focusedCell < numCells - 1)
+            else if (event.key === 'ArrowRight' && focusedCell < numCells - 1)
                 setFocusedCell(prevRow => prevRow + 1)
-            else if (event.key === 'w' || event.key === 's')
+            else if (event.key === 'ArrowUp' || event.key === 'ArrowDown')
                 setFocusedCell(0) //reset the focused cell if we're moving to another row
         }
         document.addEventListener('keydown', handleKeyPress)

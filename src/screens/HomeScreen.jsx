@@ -75,9 +75,9 @@ const HomeScreen = () => {
     // handle keypress events to navigate the rows (and keep within bounds)
     useEffect(() => {
         const handleKeyPress = (event) => {
-            if (event.key === 'w' && focusedRow > 2) // normally this would be 0, but the first two rows had parsing issues
+            if (event.key === 'ArrowUp' && focusedRow > 2) // normally this would be 0, but the first two rows had parsing issues
                 setFocusedRow(prevRow => prevRow - 1)
-            else if (event.key === 's' && focusedRow < numRows - 1)
+            else if (event.key === 'ArrowDown' && focusedRow < numRows - 1)
                 setFocusedRow(prevRow => prevRow + 1)
         }
         document.addEventListener('keydown', handleKeyPress)
