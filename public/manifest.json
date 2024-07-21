@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Disney Assignment",
+  "name": "Sample Roku home screen implemented in React.",
   "icons": [
     {
       "src": "favicon.ico",
