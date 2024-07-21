@@ -80,8 +80,18 @@ const HomeScreen = () => {
         return () => { document.removeEventListener('keydown', handleKeyPress)}
     }, [focusedRow, numRows]) //this also needs to keep track of focusedRow since it changes
 
+    //calculate the y-offset for the row based on the focused row
+    let yOffset;
+    if (focusedRow <= 5) { // no need to scroll until the 5th row is selected
+        yOffset = 0
+    } else {
+        yOffset = (focusedRow - 5) * -225 + 'px'
+    }
+
+    const transition = "transform 0.25s ease-in-out, opacity 0.35s ease-in";
+
     return (
-        <div>
+        <div style={{transform: `translateY(${yOffset})`, transition}}>
             {data && data.map((obj, idx) => (
                 <Row 
                     title={obj.text}
