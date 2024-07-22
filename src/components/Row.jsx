@@ -24,9 +24,9 @@ const Row = ({ title, items, isRowFocused }) => {
 
     function calculateXOffset() {
         if (isRowFocused && focusedCell < numCells - 4) // don't move ant further if we're 4 away from the end
-            return focusedCell * -320 + 'px' // 300px image + 20px margin
+            return focusedCell * -324 + 'px' // 300px image + 20px margin
         else
-            return isRowFocused ? (numCells - 5) * -320 + 'px' : '0px'
+            return isRowFocused ? (numCells - 5) * -324 + 'px' : '0px'
     }
 
     return (
