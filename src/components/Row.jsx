@@ -24,9 +24,9 @@ const Row = ({ title, items, isRowFocused }) => {
     //calculate the x-offset for the row based on the focused cell
     let xOffset;
     if (isRowFocused && focusedCell < numCells - 4) { // don't move ant further if we're 4 away from the end
-        xOffset = focusedCell * -324 + 'px'
+        xOffset = focusedCell * -320 + 'px'
     } else {
-        xOffset = isRowFocused ? (numCells - 5) * -324 + 'px' : '0px'
+        xOffset = isRowFocused ? (numCells - 5) * -320 + 'px' : '0px'
     }
 
     const transition = "transform 0.25s ease-in-out, opacity 0.35s ease-in";
@@ -35,17 +35,17 @@ const Row = ({ title, items, isRowFocused }) => {
     return (
         <div>
             {!exceptions.includes(title) &&
-                <div style={{ height: "225px", display: "flex", justifyContent: "left", alignItems: "center" }}>
+                <div style={{ height: "225px", display: "flex", justifyContent: "left", alignItems: "center", marginBottom: '5px'}}>
                     <div>
                         <p>{title}</p>
-                        <div style={{ width: "300px", display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition }}>
+                        <div style={{ width: `${numCells * 320}px`, display: 'flex', flexWrap: 'nowrap', transform: `translateX(${xOffset})`, transition, marginTop: 15}}>
                             {items.map((obj, idx) => {
                                 if (exceptions.includes(obj.title))
                                     return null;
                                 else {
                                     //define styles for both focused and unfocused states
                                     const scale = idx === focusedCell && isRowFocused ? "1.0" : "0.9";
-                                    const opacity = idx === focusedCell && isRowFocused ? "100%" : "50%";
+                                    const opacity = idx === focusedCell && isRowFocused ? "100%" : "70%";
                                     const blurOpacity = idx === focusedCell && isRowFocused ? "100%" : "0%";
                                     const border = idx === focusedCell && isRowFocused ? "2px solid white" : "2px solid transparent";
                                     const shadows = idx === focusedCell && isRowFocused ? "10px 10px 30px black" : "15px 15px 30px black";

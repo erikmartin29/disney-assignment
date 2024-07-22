@@ -1,6 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import Row from '../components/Row'
 
+const fetchByRefID = async (refID) => {
+    try {
+        const response = await fetch(`https://cd-static.bamgrid.com/dp-117731241344/sets/${refID}.json`)
+        const json = await response.json()
+
+        // since the keys vary depending on the group's category, we need to find the right one
+        const keys = ['CuratedSet', 'PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
+        const objKey = Object.keys(json.data).find(key => keys.includes(key));
+
+        const showData = json.data[objKey].items.map(obj => {
+            // figure out whether it's a series or a program, so we can use the right key when parsing the object
+            const type = Object.keys(obj.text.title.full).find(key => key.includes('series') || key.includes('program'));
+            return {
+                title: obj.text.title.full[type].default.content,
+                img: obj.image.tile["1.78"][type].default.url, // ensure we use the 1.78 aspect ratio image
+            }
+        })
+        return showData
+    } catch (error) {
+        console.error('Error fetching data:', error)
+    }
+}
+
 const HomeScreen = () => {
     const [data, setData] = useState([]) // data for each Row component
 
@@ -20,29 +43,6 @@ const HomeScreen = () => {
                 //map the data to keep only the information we need (titles and images)
                 const data = await Promise.all(containers.map(async obj => {
                     if (obj.set.refId) { //fetch the data from the refId if there is one
-                        const fetchByRefID = async (refID) => {
-                            try {
-                                const response = await fetch(`https://cd-static.bamgrid.com/dp-117731241344/sets/${refID}.json`)
-                                const json = await response.json()
-
-                                // since the keys vary depending on the group's category, we need to find the right one
-                                const keys = ['CuratedSet', 'PersonalizedCuratedSet', 'BecauseYouSet', "TrendingSet", "editorial"]
-                                const objKey = Object.keys(json.data).find(key => keys.includes(key));
-
-                                const showData = json.data[objKey].items.map(obj => {
-                                    // figure out whether it's a series or a program, so we can use the right key when parsing the object
-                                    const type = Object.keys(obj.text.title.full).find(key => key.includes('series') || key.includes('program'));
-                                    return {
-                                        title: obj.text.title.full[type].default.content,
-                                        img: obj.image.tile["1.78"][type].default.url, // ensure we use the 1.78 aspect ratio image
-                                    }
-                                })
-                                return showData
-                            } catch (error) {
-                                console.error('Error fetching data:', error)
-                            }
-                        }
-
                         return {
                             text: obj.set.text.title.full.set.default.content,
                             items: await fetchByRefID(obj.set.refId)
@@ -89,7 +89,7 @@ const HomeScreen = () => {
     if (focusedRow <= 5) { // no need to scroll down until the 5th row is selected
         yOffset = 0
     } else {
-        yOffset = (focusedRow - 5) * -225 + 'px'
+        yOffset = (focusedRow - 5) * -232.5 + 'px'
     }
 
     return (
