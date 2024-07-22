@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/disney-assignment/static/css/main.795a454b.css",
-    "main.js": "/disney-assignment/static/js/main.78fd84f2.js",
+    "main.css": "/disney-assignment/static/css/main.3da6f6f5.css",
+    "main.js": "/disney-assignment/static/js/main.d6509f56.js",
     "static/js/453.d922b719.chunk.js": "/disney-assignment/static/js/453.d922b719.chunk.js",
     "index.html": "/disney-assignment/index.html",
-    "main.795a454b.css.map": "/disney-assignment/static/css/main.795a454b.css.map",
-    "main.78fd84f2.js.map": "/disney-assignment/static/js/main.78fd84f2.js.map",
+    "main.3da6f6f5.css.map": "/disney-assignment/static/css/main.3da6f6f5.css.map",
+    "main.d6509f56.js.map": "/disney-assignment/static/js/main.d6509f56.js.map",
     "453.d922b719.chunk.js.map": "/disney-assignment/static/js/453.d922b719.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.795a454b.css",
-    "static/js/main.78fd84f2.js"
+    "static/css/main.3da6f6f5.css",
+    "static/js/main.d6509f56.js"
   ]
 }
