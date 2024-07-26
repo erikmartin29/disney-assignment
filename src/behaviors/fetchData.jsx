@@ -1,4 +1,5 @@
 // fetches and parses data from the API, referencing the refID via additional calls to fetchByRefID if necessary
+// takes the setter functions for the data and the number of rows as arguments
 export const fetchData = async (setData, setNumRows) => {
     try {
         const response = await fetch('https://cd-static.bamgrid.com/dp-117731241344/home.json');

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Row from '../components/Row'
 import { fetchData } from '../behaviors/fetchData'
 
+const BASE_Y_OFFSET = 232.5 // Y offset for each row scrolled, 225px image + 5px margin + 2.5px border
+const FIRST_CLEAN_ROW = 2 // this is the first row that doesn't have parsing issues
+const ANIMATION_PARAMS = "transform 0.25s ease-in-out"; // parameters for the scrolling animation
+
 const HomeScreen = () => {
     const [data, setData] = useState([]) // data for each Row component
 
-    const [focusedRow, setFocusedRow] = useState(2) // default to 2 because first two rows had parsing issues
+    const [focusedRow, setFocusedRow] = useState(FIRST_CLEAN_ROW) // index of the focused row
     const [numRows, setNumRows] = useState(0)
-
-    const transition = "transform 0.25s ease-in-out"; // parameters for scrolling animation
 
     // fetch and parse data from the API on component mount
     useEffect(() => {
@@ -29,13 +31,13 @@ const HomeScreen = () => {
 
     function calculateYOffset() {
         if (focusedRow <= 5) // no need to scroll down until the 5th row is selected
-            return 0;
+            return 0
         else
-            return (focusedRow - 5) * -232.5 + 'px'
+            return (focusedRow - 5) * -BASE_Y_OFFSET + 'px'
     }
 
     return (
-        <div style={{ transform: `translateY(${calculateYOffset()})`, transition }}>
+        <div style={{ transform: `translateY(${calculateYOffset()})`, transition: ANIMATION_PARAMS }}>
             {data && data.map((obj, idx) => (
                 <Row
                     title={obj.text}
