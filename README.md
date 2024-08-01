@@ -5,7 +5,7 @@ Features "focus based" navigation using the arrow keys as a remote.
 
 You can try it in your browser by clicking [this link](https://erikmartin29.github.io/disney-assignment).
 
-![Screenshot 2024-07-25 at 8 01 35 PM](https://github.com/user-attachments/assets/406cb159-d5d1-4e44-9942-3df95d158711)
+![Screenshot 2024-07-31 at 10 15 14 PM](https://github.com/user-attachments/assets/979173b9-04c5-41e6-8981-96c3a713d90f)
 
 ## Running Locally
 If you'd like to run this project locally, follow these steps: 
