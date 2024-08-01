@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
-const BASE_X_OFFSET = 324 // X offset for each tile scrolled, 300px image + 20px margin + 4px border
-const COLLECTION_EXCEPTIONS = ['New to Disney+', 'Collections'] // a list of category names to ignore
-const ANIMATION_PARAMS = "transform 0.25s ease-in-out, opacity 0.35s ease-in"; // parameters for the selection animation
+import { BASE_X_OFFSET, IMAGE_EXCEPTIONS, ANIMATION_PARAMS} from '../constants/constants'
 
 const Row = ({ title, items, isRowFocused }) => {
     const [focusedCell, setFocusedCell] = useState(0) // index of the focused cell
@@ -38,23 +35,22 @@ const Row = ({ title, items, isRowFocused }) => {
 
     return (
         <div>
-            {!COLLECTION_EXCEPTIONS.includes(title) &&
                 <div style={{ height: "225px", display: "flex", justifyContent: "left", alignItems: "center", marginBottom: '5px' }}>
                     <div>
                         <p>{title}</p>
                         <div style={{ width: `${numCells * BASE_X_OFFSET}px`, transform: `translateX(${calculateXOffset()})`, transition: ANIMATION_PARAMS, display: 'flex', flexWrap: 'nowrap', marginTop: 15 }}>
                             {items.map((obj, idx) => {
-                                if (COLLECTION_EXCEPTIONS.includes(obj.title))
-                                    return null;
-                                else {
-                                    //define styles based on whether the cell is focused
+                                // check for broken images
+                                if (IMAGE_EXCEPTIONS.includes(obj.img)) {
+                                    items.splice(idx, 1) // remove the item from the list
+                                } else {
+                                    //define the styles for the cell
                                     const isCellFocused = idx === focusedCell && isRowFocused
                                     const scale = isCellFocused ? "1.0" : "0.9";
                                     const opacity = isCellFocused ? "100%" : "70%";
                                     const blurOpacity = isCellFocused ? "100%" : "0%";
                                     const border = isCellFocused ? "2px solid white" : "2px solid transparent";
                                     const shadows = isCellFocused ? "10px 10px 30px black" : "15px 15px 30px black";
-
                                     return (
                                         <div key={obj.title} style={{ transform: `scale(${scale})`, justifyContent: 'center', transformOrigin: 'center', position: 'relative', marginRight: '20px' }}>
                                             <img
@@ -75,7 +71,7 @@ const Row = ({ title, items, isRowFocused }) => {
                             })}
                         </div>
                     </div>
-                </div>}
+                </div>
         </div>
     )
 }

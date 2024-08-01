@@ -17,8 +17,13 @@ export const fetchData = async (setData, setNumRows) => {
                 //if there's no refId, we can just parse the data for the show directly
                 const items = obj.set.items.map(item => {
                     return {
-                        title: item.text.title.full.series?.default?.content || item.text.title.full.program?.default?.content,
-                        img: item.image.tile["1.78"]?.series?.default?.url || item.image.tile["1.78"]?.program?.default?.url
+                        title: item.text.title.full.series?.default?.content || 
+                               item.text.title.full.program?.default?.content || 
+                               item.text.title.full.collection?.default?.content,
+                        img: item.image.tile["1.78"]?.series?.default?.url || 
+                             item.image.tile["1.78"]?.program?.default?.url ||
+                             item.image.tile["1.78"]?.collection?.default?.url || 
+                             item.image.tile["1.78"].default?.default?.url,
                     };
                 });
 
