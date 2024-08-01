@@ -26,10 +26,10 @@ const Row = ({ title, items, isRowFocused }) => {
     function calculateXOffset() {
         if (isRowFocused) 
             // only scroll if the focused cell is not in the last 5 cells
-            if (focusedCell <= numCells - 5) {
+            if (focusedCell <= numCells) {
                 return focusedCell * -BASE_X_OFFSET + 'px';
             } else {
-                return (numCells - 5) * -BASE_X_OFFSET + 'px';
+                return (numCells) * -BASE_X_OFFSET + 'px';
             }
         else
             return '0px'

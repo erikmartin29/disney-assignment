@@ -27,10 +27,10 @@ const HomeScreen = () => {
     }, [focusedRow, numRows])
 
     function calculateYOffset() {
-        if (focusedRow <= 4) // no need to scroll down until the 5th row is selected
+        if (focusedRow === 0) // no need to scroll down until the 4th row is selected
             return 0
         else
-            return (focusedRow - 4) * -BASE_Y_OFFSET + 'px'
+            return -10 + focusedRow * -BASE_Y_OFFSET + 'px'
     }
 
     return (
