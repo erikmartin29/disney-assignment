@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { BASE_X_OFFSET, IMAGE_EXCEPTIONS, ANIMATION_PARAMS} from '../constants/constants'
 
 const Row = ({ title, items, isRowFocused }) => {
+    //filter out problematic images
+    items = items.filter(obj => !IMAGE_EXCEPTIONS.includes(obj.img))
+    const numCells = items.length
     const [focusedCell, setFocusedCell] = useState(0) // index of the focused cell
-    const numCells = items.length // number of cells in the row
-
+    
     // handle keypress events to navigate the cells
     useEffect(() => {
         const handleKeyPress = (event) => {
@@ -40,10 +42,6 @@ const Row = ({ title, items, isRowFocused }) => {
                         <p>{title}</p>
                         <div style={{ width: `${numCells * BASE_X_OFFSET}px`, transform: `translateX(${calculateXOffset()})`, transition: ANIMATION_PARAMS, display: 'flex', flexWrap: 'nowrap', marginTop: 15 }}>
                             {items.map((obj, idx) => {
-                                // check for broken images
-                                if (IMAGE_EXCEPTIONS.includes(obj.img)) {
-                                    items.splice(idx, 1) // remove the item from the list
-                                } else {
                                     //define the styles for the cell
                                     const isCellFocused = idx === focusedCell && isRowFocused
                                     const scale = isCellFocused ? "1.0" : "0.9";
@@ -67,7 +65,6 @@ const Row = ({ title, items, isRowFocused }) => {
                                             />
                                         </div>
                                     );
-                                }
                             })}
                         </div>
                     </div>
